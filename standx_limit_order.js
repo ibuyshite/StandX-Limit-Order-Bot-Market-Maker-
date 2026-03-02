@@ -4,14 +4,14 @@ class StandxLimitOrder {
     static CONFIG = {
         QUANTITY: 0.001,
         SYMBOL: 'btc-usd',
-        BPS_LADDER: [6, 7, 8],
-        REPLACEMENT_BPS: 6,
-        MIN_DISTANCE_BPS: 1.5,      // Cancel order if BPS is smaller than this (to avoid execution)
-        MAX_DISTANCE_BPS: 10,     // Cancel order if BPS is greater than this
+        BPS_LADDER: [7, 8, 9],
+        REPLACEMENT_BPS: 7,
+        MIN_DISTANCE_BPS: 3,      // Cancel order if BPS is smaller than this (to avoid execution)
+        MAX_DISTANCE_BPS: 11,     // Cancel order if BPS is greater than this
         MAX_LOOPS: 1000,             // Set to 0 or less for infinite loops
         USE_INDICATORS: true,
-        ATR_CHANGE_THRESHOLD: 2.0,  // Skip new orders if ATR changes by more than this
-        MAX_ATR: 20.0               // Max absolute ATR value to allow trading
+        ATR_CHANGE_THRESHOLD: 20.0,  // Skip new orders if ATR changes by more than this
+        MAX_ATR: 220.0               // Max absolute ATR value to allow trading
     };
 
     // ========== DOM Element Selectors ========== 
@@ -338,16 +338,25 @@ class StandxLimitOrder {
                 }
             }
 
-            // 2. Handle Open Positions (Always check/close)
-            const openPositions = await this.getOpenPositions();
-            if (openPositions.length > 0) {
-                console.log(`Found ${openPositions.length} open position(s). Closing them now.`);
-                for (const position of openPositions) {
-                    await this.closePosition(position);
-                }
-                console.log("Waiting for UI to update after closing positions...");
-                await this.delay(2000);
-            }
+        // 2. Handle Open Positions (Maker Exit Logic)
+const openPositions = await this.getOpenPositions();
+if (openPositions.length > 0) {
+    console.log(`Managing ${openPositions.length} open position(s)...`);
+    
+    const currentPrice = await this.getCurrentPrice();
+    const exitBps = 4; // or dynamic
+    
+    for (const position of openPositions) {
+        if (position.side === 'long') {
+            await this.execute('short', 1 + (exitBps / 10000));
+        } else {
+            await this.execute('long', 1 - (exitBps / 10000));
+        }
+        await this.delay(500);
+    }
+    
+    return; // skip new placements this cycle
+}
 
             // 3. Handle Open Orders & Distance Check (Always check)
             const openOrders = await this.getOpenOrders();
