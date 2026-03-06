@@ -11,7 +11,7 @@ class StandxLimitOrder {
         MAX_LOOPS: 0,             // Set to 0 or less for infinite loops
         USE_INDICATORS: true,
         ATR_CHANGE_THRESHOLD: 20.0,  // Skip new orders if ATR changes by more than this
-        MAX_ATR: 220.0               // Max absolute ATR value to allow trading
+        MAX_ATR: 420.0               // Max absolute ATR value to allow trading
     };
 
     // ========== DOM Element Selectors ========== 
@@ -344,7 +344,7 @@ if (openPositions.length > 0) {
     console.log(`Managing ${openPositions.length} open position(s)...`);
     
     const currentPrice = await this.getCurrentPrice();
-    const exitBps = 4; // or dynamic
+    const exitBps = 5; // or dynamic
     
     for (const position of openPositions) {
         if (position.side === 'long') {
