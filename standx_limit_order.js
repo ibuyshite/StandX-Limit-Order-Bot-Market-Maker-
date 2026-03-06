@@ -4,11 +4,11 @@ class StandxLimitOrder {
     static CONFIG = {
         QUANTITY: 0.001,
         SYMBOL: 'btc-usd',
-        BPS_LADDER: [7, 8, 9],
-        REPLACEMENT_BPS: 7,
+        BPS_LADDER: [8.5, 9.5, 10],
+        REPLACEMENT_BPS: 8.5,
         MIN_DISTANCE_BPS: 3,      // Cancel order if BPS is smaller than this (to avoid execution)
         MAX_DISTANCE_BPS: 11,     // Cancel order if BPS is greater than this
-        MAX_LOOPS: 1000,             // Set to 0 or less for infinite loops
+        MAX_LOOPS: 0,             // Set to 0 or less for infinite loops
         USE_INDICATORS: true,
         ATR_CHANGE_THRESHOLD: 20.0,  // Skip new orders if ATR changes by more than this
         MAX_ATR: 220.0               // Max absolute ATR value to allow trading
@@ -458,7 +458,7 @@ if (openPositions.length > 0) {
         console.log("Starting automated trading loop (runs every 30 seconds)...");
         console.log("To stop, run: orderPlacer.stop()");
         this.runTradingCycle();
-        this.loopInterval = setInterval(() => this.runTradingCycle(), 30000);
+        this.loopInterval = setInterval(() => this.runTradingCycle(), 4000);
     }
 
     stop() {
