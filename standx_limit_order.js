@@ -4,14 +4,14 @@ class StandxLimitOrder {
     static CONFIG = {
         QUANTITY: 0.001,
         SYMBOL: 'btc-usd',
-        BPS_LADDER: [8.5, 9.5, 10],
-        REPLACEMENT_BPS: 8.5,
-        MIN_DISTANCE_BPS: 3,      // Cancel order if BPS is smaller than this (to avoid execution)
-        MAX_DISTANCE_BPS: 11,     // Cancel order if BPS is greater than this
+        BPS_LADDER: [6.5, 7.5, 8.5],
+        REPLACEMENT_BPS: 7.0,
+        MIN_DISTANCE_BPS: 5.5,      // Cancel order if BPS is smaller than this (to avoid execution)
+        MAX_DISTANCE_BPS: 9.5,     // Cancel order if BPS is greater than this
         MAX_LOOPS: 0,             // Set to 0 or less for infinite loops
         USE_INDICATORS: true,
-        ATR_CHANGE_THRESHOLD: 20.0,  // Skip new orders if ATR changes by more than this
-        MAX_ATR: 420.0               // Max absolute ATR value to allow trading
+        ATR_CHANGE_THRESHOLD: 15.0,  // Skip new orders if ATR changes by more than this
+        MAX_ATR: 350.0               // Max absolute ATR value to allow trading
     };
 
     // ========== DOM Element Selectors ========== 
@@ -344,7 +344,7 @@ if (openPositions.length > 0) {
     console.log(`Managing ${openPositions.length} open position(s)...`);
     
     const currentPrice = await this.getCurrentPrice();
-    const exitBps = 5; // or dynamic
+    const exitBps = 10; // or dynamic
     
     for (const position of openPositions) {
         if (position.side === 'long') {
